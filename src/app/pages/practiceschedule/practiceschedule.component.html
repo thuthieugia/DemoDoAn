@@ -1,0 +1,117 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(practiceschedule)">Thêm lịch thực hành </a>
+</div>
+</div>
+<nz-table [nzData]="practiceschedules" [nzPageSize]="6" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Ca</th>
+        <th>Nhóm</th>
+        <th>Phòng</th>
+        <th>Giảng viên</th>
+        <th>Ngày</th>
+        <th>Thời gian bắt đầu</th>
+        <th>Thời gian kết thúc</th>
+        <th>Trạng thái</th>
+        <th>Kỳ</th>
+        <th>Năm</th>
+        <th>Ghi chú</th>
+        <th>Yêu cầu</th>
+        <th>Điểm danh</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let practiceschedule of basicTable.data; let i = index;" (dblclick)="doubleClick(practiceschedule)" [class.selected]="practiceschedule === selectedPracticeschedule">
+        <td>{{i + 1}}</td>
+        <td>{{ practiceschedule.practiceSchedulePracticeShiftname }}</td>
+        <td>{{ practiceschedule.practiceSchedulePracticeGroup }}</td>
+        <td>{{ practiceschedule.practiceSchedulePracticalLaboratory }}</td>
+        <td>{{ practiceschedule.practiceScheduleTeacher }}</td>
+        <td>{{ practiceschedule.date | date: 'dd/MM/yyyy'  }}</td>
+        <td>{{ practiceschedule.practiceSchedulePracticeShiftstarttime | date: 'HH:MM' }}</td>
+        <td>{{ practiceschedule.practiceSchedulePracticeShiftendtime | date: 'HH:MM' }}</td>
+        <td>{{ practiceschedule.status === 1 ? "đã dạy" : "chưa dạy"   }}</td>
+        <td>{{ practiceschedule.practiceScheduleSemester }}</td>
+        <td>{{ practiceschedule.practiceScheduleSchoolYear }}</td>
+        <td>{{ practiceschedule.description}}</td>
+        <td>
+          <nz-switch [ngModel]="practiceschedule.request === 1 ? true : false" nzDisabled></nz-switch>
+        </td>
+        <td >
+          <a (click)="findIdAttendance(practiceschedule.practiceScheduleID)"><i class="fas fa-pencil-alt"></i> Điểm danh</a>
+        </td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(practiceschedule.practiceScheduleID)" [disabled]="practiceschedule.isDeleting" nzDanger>
+            <span *ngIf="practiceschedule.isDeleting"></span>
+            <span *ngIf="!practiceschedule.isDeleting">xoá</span>
+          </button>
+        </td>
+    </tbody>
+  </nz-table>
+  <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lịch thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <form class="form-horizontal" #practicescheduleForm="ngForm" role="form" nz-row>
+        <nz-input-group nz-col nzSpan="12">
+          <div >Ca</div>
+          <nz-select style="width:170px;" [(ngModel)]="practiceShiftID" [ngModelOptions]="{standalone: true}" (ngModelChange)="changePracticeShift($event)">
+            <nz-option *ngFor="let prst of listPracticeShift" [nzLabel]="prst.practiceShiftName ?? ''" [nzValue]="prst.practiceShiftID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12">
+          <div >Nhóm</div>
+          <nz-select style="width:170px;" [(ngModel)]="practiceGroupID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changePracticeGroup($event)">
+            <nz-option *ngFor="let lst of listPracticeGroup" [nzLabel]="lst.practiceGroupName ?? ''" [nzValue]="lst.practiceGroupID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12">
+          <div >Phòng</div>
+          <nz-select style="width:170px;" [(ngModel)]="practicalLaboratoryID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changePracticalLaboratory($event)">
+            <nz-option *ngFor="let lbtr of listPracticalLaboratory" [nzLabel]="lbtr.practicalLaboratoryName ?? ''" [nzValue]="lbtr.practicalLaboratoryID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+
+        <nz-input-group nz-col nzSpan="12">
+          <div >Giảng viên</div>
+          <nz-select style="width:170px;" [(ngModel)]="teacherID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeTeacher($event)">
+            <nz-option *ngFor="let tec of listTeacher" [nzLabel]="tec.fullName ?? ''" [nzValue]="tec.teacherID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+
+        <nz-input-group nz-col nzSpan="12">
+          <div> Ngày</div>
+          <nz-date-picker nz-select style="width:170px;" [(ngModel)]="practiceschedule.date" name="startdate" id="startdate" class="form-control" ></nz-date-picker>
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12"><div> Trạng thái </div>
+          <input type="text" [(ngModel)]="practiceschedule.status"  name="sta" id="sta" class="form-control" />
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12">
+          <div >Kỳ</div>
+          <nz-select style="width:170px;" [(ngModel)]="semesterID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSemester($event)">
+            <nz-option *ngFor="let sem of listSemester" [nzLabel]="sem.semesterName ?? ''" [nzValue]="sem.semesterID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12">
+          <div >Năm</div>
+          <nz-select style="width:170px;" [(ngModel)]="schoolYearID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSchoolYear($event)">
+            <nz-option *ngFor="let sch of listSchoolYear" [nzLabel]="sch.schoolYearName ?? ''" [nzValue]="sch.schoolYearID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="12"><div> Yêu cầu </div>
+          <input type="checkbox" [(ngModel)]="practiceschedule.request"  name="req" id="req" class="form-control" />
+        </nz-input-group>
+        <nz-input-group nz-col nzSpan="24"><div> Ghi chú </div>
+            <textarea nz-input [(ngModel)]="practiceschedule.description" name="des" id="des" ></textarea>
+        </nz-input-group>
+    </form>
+    </ng-container>
+  </nz-modal>

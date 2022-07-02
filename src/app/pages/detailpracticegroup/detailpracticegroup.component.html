@@ -1,0 +1,58 @@
+<!-- <a (click)="click(detailmoduleclass)">Thêm năm học </a> -->
+<div nz-row>
+  <nz-table #basicTable nz-col nzSpan="12" >
+<tr>
+  <td>Học phần:</td>
+  <!-- <td>{{ detailpracticegroups.moduleClassModuleName }}</td> -->
+</tr>
+<tr >
+  <td >Bộ môn:</td>
+  <!-- <td>{{ detailpracticegroups.moduleSubject }}</td> -->
+</tr>
+<tr >
+  <td>Số tín chỉ:</td>
+  <!-- <td>{{ detailpracticegroups.moduleClassSemester}}</td> -->
+</tr >
+</nz-table>
+<nz-table #basicTable nz-col nzSpan="12" >
+    <tr >
+      <td>Mã Học Phần:</td>
+    <!-- <td>{{ detailpracticegroups.moduleClassModuleCode }}</td> -->
+    </tr >
+    <tr >
+      <td>Mã lớp học phần:</td>
+      <!-- <td>{{ detailpracticegroups.moduleClassCode }}</td> -->
+    </tr>
+    <tr>
+      <td >Giảng viên:</td>
+      <!-- <td>{{ detailpracticegroups.moduleClassTeacher}}</td> -->
+    </tr>
+</nz-table>
+</div>
+<nz-table [nzData]="detailpracticegroups" [nzPageSize]="7" #basicTable>
+
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Mã sinh viên</th>
+      <th>Tên sinh viên</th>
+      <th>Ghi chú</th>
+      <th>lớp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let detailpracticegroup of basicTable.data; let i = index;">
+      <td>{{i + 1}}</td>
+      <td>{{ detailpracticegroup.detailModuleClassStudentCode}}</td>
+      <td>{{ detailpracticegroup.studentDetailPracticeGroupName }}</td>
+      <td>{{ detailpracticegroup.note }}</td>
+      <td>{{ detailpracticegroup.studentClass }}</td>
+    </tr>
+  </tbody>
+</nz-table>
+<style>
+  div nz-table tr td {
+   border: 1px solid black;
+  }
+</style>
+

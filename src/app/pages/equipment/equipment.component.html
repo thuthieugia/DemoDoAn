@@ -1,0 +1,79 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Tìm kiếm..." />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i nz-icon nzType="search"></i>
+    </ng-template>
+  </div>
+  <div nz-col nzOffset="9">
+    <button nz-button nzType="primary"(click)="click(equipment)">Báo cáo</button>
+  </div>
+  <div nz-col nzOffset="1">
+    <button nz-button nzType="primary"(click)="click(equipment)">Thêm thiết bị</button>
+  </div>
+</div>
+<div nz-col nzOffset="1">
+  <div>
+      <td >Mã phòng: </td><td> P-669213</td>
+  </div>
+  <div>
+      <td >Tên phòng: </td><td>Phòng 705</td>
+  </div>
+  <div>
+      <td>Trạng thái: </td><td>Bình thường</td>
+  </div>
+</div>
+<div>
+  <nz-table [nzData]="equipments" [nzPageSize]="5" #basicTable>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã thiết bị</th>
+        <th>Tên thiết bị</th>
+        <th>Mô tả</th>
+        <th>Trạng thái</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let equipment of basicTable.data; let i = index;"(dblclick)="doubleClick(equipment)" [class.selected]="equipment === selectedEquipment">
+        <td>{{ i + 1 }}</td>
+        <td>{{ equipment.equipmentCode }}</td>
+        <td>{{ equipment.equipmentName }}</td>
+        <td>{{ equipment.description }}</td>
+        <td>{{ equipment.equipmentStatus === 1 ? "Bình thường" : "Bảo trì" }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(equipment.equipmentID)" [disabled]="equipment.isDeleting" nzDanger>
+          <span *ngIf="equipment.isDeleting"></span>
+          <span *ngIf="!equipment.isDeleting">xoá</span>
+        </button>
+      </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lịch thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #equipmentForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã thiết bị</div>
+        <input type="text" [(ngModel)]="equipment.equipmentCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> tên thiết bị</div>
+        <input type="text" [(ngModel)]="equipment.equipmentName"  name="name" id="name" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Trạng thái</div>
+        <input type="text" [(ngModel)]="equipment.equipmentStatus"  name="dess" id="dess" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="24"><div> Mô tả </div>
+        <textarea nz-input [(ngModel)]="equipment.description" name="des" id="des" ></textarea>
+      </nz-input-group>
+
+
+    </form>
+  </ng-container>
+</nz-modal>
+
+

@@ -1,0 +1,97 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+    <button nz-button nzType="primary" (click)="click(practicallaboratory)">Thêm phòng thực hành </button>
+</div>
+</div>
+<nz-table [nzData]="practicallaboratorys" [nzPageSize]="8" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th> Mã Phòng</th>
+        <th>Tên Phòng</th>
+        <th>Số Chỗ</th>
+        <th>Tên Tòa Nhà</th>
+        <th>Bộ Môn Quản lý</th>
+        <th>Khoa Quản Lý</th>
+        <th>Mô Tả</th>
+        <th>Trạng thái</th>
+        <th>Thiết bị</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let practicallaboratory of basicTable.data; let i = index;" (dblclick)="doubleClick(practicallaboratory)" [class.selected]="practicallaboratory === selectedPracticallaboratory">
+        <td>{{i + 1}}</td>
+        <td>{{ practicallaboratory.practicalLaboratoryCode }}</td>
+        <td>{{ practicallaboratory.practicalLaboratoryName }}</td>
+        <td>{{ practicallaboratory.numberOfSeats }}</td>
+        <td>{{ practicallaboratory.practicalLaboratoryBuilding }}</td>
+        <td>{{ practicallaboratory.practicalLaboratorySubject }}</td>
+        <td>{{ practicallaboratory.practicalLaboratoryOlogy }}</td>
+        <td>{{ practicallaboratory.description}}</td>
+        <td>{{ practicallaboratory.status === 1 ? "Bảo trì" : "Bình thường"}}</td>
+        <td >
+          <a (click)="findIdEquipment(practicallaboratory.practicalLaboratoryID)" >Chi Tiết</a>
+        </td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(practicallaboratory.practicalLaboratoryID)" [disabled]="practicallaboratory.isDeleting" nzDanger>
+            <span *ngIf="practicallaboratory.isDeleting"></span>
+            <span *ngIf="!practicallaboratory.isDeleting">xoá</span>
+          </button>
+
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lịch thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #practicallaboratoryForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã phòng thực hành</div>
+        <input type="text" [(ngModel)]="practicallaboratory.practicalLaboratoryCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> tên phòng thực hành</div>
+        <input type="text" [(ngModel)]="practicallaboratory.practicalLaboratoryName"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Số chỗ (*) </div>
+        <nz-input-number [(ngModel)]="practicallaboratory.numberOfSeats" [nzStep]="1"></nz-input-number>
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Toà nhà</div>
+        <nz-select  style="width:170px;" [(ngModel)]="buildingID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeBuilding($event)">
+          <nz-option *ngFor="let sem of listBuilding" [nzLabel]="sem.buildingName ?? ''" [nzValue]="sem.buildingID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Bộ môn</div>
+        <nz-select style="width:170px;" [(ngModel)]="subjectID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSubject($event)">
+          <nz-option *ngFor="let sch of listSubject" [nzLabel]="sch.subjectName ?? ''" [nzValue]="sch.subjectID" ></nz-option>
+        </nz-select>
+      </nz-input-group >
+      <nz-input-group nz-col nzSpan="12">
+        <div >Khoa</div>
+        <nz-select  style="width:170px;" [(ngModel)]="ologyID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeOlogy($event)">
+          <nz-option *ngFor="let mod of listOlogy" [nzLabel]="mod.ologyName ?? ''" [nzValue]="mod.ologyID" ></nz-option>
+        </nz-select >
+      </nz-input-group>
+      <nz-form-control [nzSpan]="12" nzHasFeedback><div> Trạng thái </div>
+        <nz-select name="select-error" [ngModel]="'Bình thường'">
+          <nz-option nzValue="1" nzLabel="Bình thường"></nz-option>
+          <nz-option nzValue="0" nzLabel="Bảo trì"></nz-option>
+        </nz-select>
+      </nz-form-control>
+      <nz-input-group nz-col nzSpan="24"><div> Mô tả </div>
+        <textarea nz-input [(ngModel)]="practicallaboratory.description" name="des" id="des" ></textarea>
+    </nz-input-group>
+
+
+
+  </form>
+  </ng-container>
+</nz-modal>

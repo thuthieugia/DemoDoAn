@@ -1,0 +1,115 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+  <div nz-col nzOffset="8">
+  <button nz-button nzType="primary" (click)="open()">Điểm danh</button>
+</div>
+   <div nz-col nzOffset="1">
+<button nz-button nzType="primary" >Thêm học sinh </button>
+</div>
+</div>
+
+<div nz-row >
+  <nz-table #basicTable nz-col nzSpan="12" >
+<tr>
+  <td >Ca</td>
+  <td>{{ attendances.practiceSchedulePracticeShiftname }}</td>
+</tr>
+<tr >
+  <td>Nhóm</td>
+  <td>{{ attendances.practiceSchedulePracticeGroup }}</td>
+</tr>
+<tr >
+  <td>Phòng</td>
+  <td>{{ attendances.practiceSchedulePracticalLaboratory}}</td>
+</tr >
+</nz-table>
+<nz-table #basicTable nz-col nzSpan="12" >
+    <tr >
+      <td>Giảng viên</td>
+    <td>{{ attendances.practiceScheduleTeacher }}</td>
+    </tr >
+    <tr >
+      <td>Ngày</td>
+      <td>{{ attendances.date | date: 'dd/MM/yyyy'  }}</td>
+    </tr>
+    <tr>
+      <td >Vắng:</td>
+      <td>{{ attendances.vang }}</td>
+    </tr>
+</nz-table>
+</div>
+<nz-table [nzData]="['']" >
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Mã sinh viên</th>
+      <th>Tên sinh viên</th>
+      <th>Ghi chú</th>
+      <th>Điểm danh</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let attendance of listAttendance; let i = index;">
+      <td>{{i + 1}}</td>
+      <td>{{ attendance.attendanceStudentCode }}</td>
+      <td>{{ attendance.attendanceStudentName }}</td>
+      <td>{{ attendance.description }}</td>
+      <td>
+        <nz-switch [ngModel]="attendance.attendanceStatus === 0 ? true : false"></nz-switch>
+      </td>
+      <td>
+        <button nz-button nzType="primary"  nzDanger>
+          <span ></span>
+          <span >xoá</span>
+        </button>
+      </td>
+      </tr>
+  </tbody>
+</nz-table>
+<style>
+  div nz-table tr td {
+   border: 1px solid black;
+  }
+</style>
+
+
+
+<nz-drawer
+[nzClosable]="false"
+[nzVisible]="visible"
+nzPlacement="right"
+nzTitle="Điểm danh"
+(nzOnClose)="close()"
+>
+<ng-container *nzDrawerContent>
+  <nz-table [nzData]="['']" >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã sinh viên</th>
+        <th>Tên sinh viên</th>
+        <th>Điểm danh</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let attendance of listAttendance; let i = index;">
+        <td>{{i + 1}}</td>
+        <td>{{ attendance.attendanceStudentCode }}</td>
+        <td>{{ attendance.attendanceStudentName }}</td>
+        <td>
+          <nz-switch [ngModel]="attendance.attendanceStatus === 0 ? true : false"></nz-switch>
+        </td>
+        </tr>
+    </tbody>
+  </nz-table>
+</ng-container>
+</nz-drawer>
+
+

@@ -1,0 +1,102 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<button (click)="click(moduleclass)">Thêm lớp học phần </button>
+</div>
+</div>
+<nz-table [nzData]="moduleclasss" [nzPageSize]="6" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>  Mã Lớp Học Phần</th>
+        <th>  Học Phần</th>
+        <th>  Học Kỳ</th>
+        <th>  Năm Học</th>
+        <th>  Giảng Viên</th>
+        <th>  Thời Gian Bắt Đầu</th>
+        <th>  Thời Gian Kết Thúc</th>
+        <th>  Trạng Thái</th>
+        <th>  Chi Tiết</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let moduleclass of basicTable.data; let i = index;" (dblclick)="doubleClick(moduleclass)" [class.selected]="moduleclass === selectedModuleclass">
+        <td>{{i + 1}}</td>
+        <td>{{ moduleclass.moduleClassCode }}</td>
+        <td>{{ moduleclass.moduleClassModuleName }}</td>
+        <td>{{ moduleclass.moduleClassSemester }}</td>
+        <td>{{ moduleclass.moduleClassSchoolYear }}</td>
+        <td>{{ moduleclass.moduleClassTeacher }}</td>
+        <td>{{ moduleclass.startTime| date: 'dd/MM/yyyy'  }}</td>
+        <td>{{ moduleclass.endTime| date: 'dd/MM/yyyy'  }}</td>
+        <td>{{ moduleclass.status === 0 ? "Chưa học" : moduleclass.status === 1 ?  "Đang học" : "Đã kết thúc" }}</td>
+        <td >
+          <a (click)="findIdDetailModuleClass(moduleclass.moduleClassID)" >Xem chi tiết</a>
+        </td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(moduleclass.moduleClassID)" [disabled]="moduleclass.isDeleting" nzDanger>
+            <span *ngIf="moduleclass.isDeleting"></span>
+            <span *ngIf="!moduleclass.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lịch thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #moduleclassForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã lớp học phần</div>
+        <input type="text" [(ngModel)]="moduleclass.moduleClassCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Học Phần</div>
+        <nz-select  style="width:170px;" [(ngModel)]="moduleID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSchoolYear($event)">
+          <nz-option *ngFor="let mod of listModule" [nzLabel]="mod.moduleName ?? ''" [nzValue]="mod.moduleID" ></nz-option>
+        </nz-select >
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Kỳ</div>
+        <nz-select  style="width:170px;" [(ngModel)]="semesterID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSemester($event)">
+          <nz-option *ngFor="let sem of listSemester" [nzLabel]="sem.semesterName ?? ''" [nzValue]="sem.semesterID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Năm</div>
+        <nz-select style="width:170px;" [(ngModel)]="schoolYearID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSchoolYear($event)">
+          <nz-option *ngFor="let sch of listSchoolYear" [nzLabel]="sch.schoolYearName ?? ''" [nzValue]="sch.schoolYearID" ></nz-option>
+        </nz-select>
+      </nz-input-group >
+      <nz-input-group nz-col nzSpan="12">
+        <div >Giảng viên</div>
+        <nz-select style="width:170px;" [(ngModel)]="teacherID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeTeacher($event)">
+          <nz-option *ngFor="let tea of listTeacher" [nzLabel]="tea.fullName ?? ''" [nzValue]="tea.teacherID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+      <!-- <nz-input-group nz-col nzSpan="12"><div> Trạng thái </div>
+        <input type="text" [(ngModel)]="moduleclass.status"  name="sta" id="sta" class="form-control" />
+      </nz-input-group> -->
+      <nz-form-control [nzSpan]="12" nzHasFeedback><div> Trạng thái </div>
+        <nz-select name="select-error" [(ngModel)]="moduleclass.status" [ngModelOptions]="{standalone: true}" >
+          <nz-option nzValue="2" nzLabel="Ket thuc"></nz-option>
+          <nz-option nzValue="1" nzLabel="dang hoc"></nz-option>
+          <nz-option nzValue="0" nzLabel="chua hoc"></nz-option>
+        </nz-select>
+      </nz-form-control>
+      <nz-input-group nz-col nzSpan="12">
+        <div> Thời gian bắt đầu</div>
+        <nz-date-picker [(ngModel)]="moduleclass.startTime" name="startdate" id="startdate" class="form-control" ></nz-date-picker>
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Thời gian kết thúc</div>
+        <nz-date-picker [(ngModel)]="moduleclass.endTime"  name="enddate" id="enddate" class="form-control" ></nz-date-picker>
+      </nz-input-group>
+
+  </form>
+  </ng-container>
+</nz-modal>

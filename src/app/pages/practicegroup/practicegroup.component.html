@@ -1,0 +1,35 @@
+
+  <nz-table [nzData]="['']" >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Nhóm</th>
+          <th>Tên Nhóm</th>
+          <th>Lớp Học Phần</th>
+          <th>Giảng Viên</th>
+          <th>Ghi Chú</th>
+          <th>Lớp học phần</th>
+          <th>Chi tiết</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let practicegroup of practicegroups; let i = index;">
+        <td>{{i + 1}}</td>
+        <td>{{ practicegroup.practiceGroupCode }}</td>
+        <td>{{ practicegroup.practiceGroupName }}</td>
+        <td>{{ practicegroup.practiceGroupModuleClass }}</td>
+        <td>{{ practicegroup.practiceGroupTeacher }}</td>
+        <td>{{ practicegroup.note }}</td>
+        <td>{{ practicegroup.practiceGroupModuleClass }}</td>
+        <td >
+          <a (click)="findIdDetailpracticegroup(practicegroup.practiceGroupID)" >Chi Tiết</a>
+        </td>
+        <td >
+          <button nz-button nzType="primary" (click)="delete(practicegroup.practiceGroupID)" [disabled]="practicegroup.isDeleting" nzDanger>
+           <span *ngIf="practicegroup.isDeleting" ></span>
+           <span *ngIf="!practicegroup.isDeleting">Delete</span>
+          </button>
+       </td>
+      </tr>
+    </tbody>
+  </nz-table>

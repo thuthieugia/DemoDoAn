@@ -1,0 +1,43 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<button nz-button nzType="primary" (click)="click(semester)">Thêm học kỳ </button>
+</div>
+</div>
+<nz-table [nzData]="['']" >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Học Kỳ </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let semester of semesters; let i = index;" (dblclick)="doubleClick(semester)" [class.selected]="semester === selectedSemester">
+        <td>{{i + 1}}</td>
+        <td>{{ semester.semesterName }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(semester.semesterID)" [disabled]="semester.isDeleting" nzDanger>
+            <span *ngIf="semester.isDeleting"></span>
+            <span *ngIf="!semester.isDeleting">xoá</span>
+          </button>
+
+        </td>
+    </tbody>
+  </nz-table>
+  <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý học kỳ" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <form class="form-horizontal" #semesterForm="ngForm" role="form">
+        <nz-input-group>
+          <div> Tên học kỳ</div>
+          <input type="text" [(ngModel)]="semester.semesterName"  name="code" id="code" class="form-control" />
+        </nz-input-group>
+    </form>
+    </ng-container>
+  </nz-modal>

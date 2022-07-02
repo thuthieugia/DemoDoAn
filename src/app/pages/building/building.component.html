@@ -1,0 +1,51 @@
+
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="9">
+<a (click)="click(building)" nz-col nzOffset="0">Thêm khu thực hành </a>
+</div>
+</div>
+<nz-table [nzData]="buildings" [nzPageSize]="7" #basicTable>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên Tòa Nhà </th>
+        <th>Tên Cơ sở</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- ondblclick="doStuff();" -->
+      <tr *ngFor="let building of basicTable.data; let i = index;" (dblclick)="doubleClick(building)" [class.selected]="building === selectedBuilding">
+        <td>{{i + 1}}</td>
+        <td>{{ building.buildingName }}</td>
+        <td>{{ building.baseBuilding }}</td>
+        <td >
+          <button nz-button nzType="primary" (click)="delete(building.buildingID)" [disabled]="building.isDeleting" nzDanger>
+           <span *ngIf="building.isDeleting" ></span>
+           <span *ngIf="!building.isDeleting">Delete</span>
+          </button>
+       </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý khu thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #buildingForm="ngForm" role="form">
+      <nz-input-group>
+        <div> Tên toà nhà</div>
+        <input type="text" [(ngModel)]="building.buildingName"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group>
+        <div >Tên cơ sở</div>
+        <input type="text" [(ngModel)]="building.baseBuilding"  name="email" id="email" class="form-control" />
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>

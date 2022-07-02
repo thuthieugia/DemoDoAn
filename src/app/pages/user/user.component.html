@@ -1,0 +1,58 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(user)">Thêm tài khoản </a>
+</div>
+</div>
+ <div>
+    <nz-table [nzData]="['']" >
+      <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tài khoản</th>
+          <th>Mật Khẩu</th>
+          <th>Quyền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users; let i = index;" (dblclick)="doubleClick(user)" [class.selected]="user === selectedUser" >
+          <td>{{i + 1}}</td>
+          <td>{{ user.userName }}</td>
+          <td>{{ user.password }}</td>
+          <td>{{ user.userPermission}}</td>
+          <td>
+            <button nz-button nzType="primary" (click)="delete(user.userID)" [disabled]="user.isDeleting" nzDanger>
+              <span *ngIf="user.isDeleting"></span>
+              <span *ngIf="!user.isDeleting">xoá</span>
+            </button>
+          </td>
+        </tr>
+
+      </tbody>
+    </nz-table>
+<div>
+    <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý tài Khoản " (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+      <ng-container *nzModalContent>
+        <form class="form-horizontal" #userForm="ngForm" role="form">
+          <nz-input-group><div> Tài Khoản</div><input type="text" [(ngModel)]="user.userName"  name="name" id="name" class="form-control" /></nz-input-group>
+          <nz-input-group>
+          <div >Mật khẩu:</div>
+          <input type="text" [(ngModel)]="user.password" name="pass" id="pass" class="form-control" />
+          </nz-input-group>
+          <nz-input-group>
+          <div >Quyền</div>
+          <nz-select style="width:170px;" [(ngModel)]="permissionID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changePermission($event)">
+            <nz-option *ngFor="let per of listPermission" [nzLabel]="per.permissionName ?? ''" [nzValue]="per.permissionID" ></nz-option>
+          </nz-select>
+        </nz-input-group>
+      </form>
+      </ng-container>
+    </nz-modal>
+</div>

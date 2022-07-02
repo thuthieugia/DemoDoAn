@@ -1,0 +1,65 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+    <a (click)="click(class)">Thêm lớp học </a>
+    </div>
+    </div>
+<nz-table  [nzData]="classs" [nzPageSize]="7" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Lớp</th>
+        <th>Tên Lớp</th>
+        <th>Tên Ngành</th>
+        <th>Tên Khóa</th>
+        <!-- <th colspan="2"></th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let class of basicTable.data; let i = index;" (dblclick)="doubleClick(class)" [class.selected]="class === selectedClass">
+        <td>{{i + 1}}</td>
+        <td>{{ class.classCode }}</td>
+        <td>{{ class.className }}</td>
+        <td>{{ class.classMajors }}</td>
+        <td>{{ class.classCourse }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(class.classID)" [disabled]="class.isDeleting" nzDanger>
+            <span *ngIf="class.isDeleting"></span>
+            <span *ngIf="!class.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lớp học" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #classForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> mã lớp</div>
+        <input type="text" [(ngModel)]="class.classCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> tên lớp</div>
+        <input type="text" [(ngModel)]="class.className"  name="name" id="name" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Tên ngành</div>
+      <nz-select style="width:170px;" [(ngModel)]="majorsID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeMajors($event)">
+        <nz-option *ngFor="let per of listMajors" [nzLabel]="per.majorsName ?? ''" [nzValue]="per.majorsID" ></nz-option>
+      </nz-select>
+    </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Tên khoá học</div>
+      <nz-select style="width:170px;" [(ngModel)]="courseID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeCourse($event)">
+        <nz-option *ngFor="let per of listCourse" [nzLabel]="per.courseName ?? ''" [nzValue]="per.courseID" ></nz-option>
+      </nz-select>
+    </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>
+

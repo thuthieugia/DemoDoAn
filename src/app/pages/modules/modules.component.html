@@ -1,0 +1,62 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(modules)">Thêm học phần </a>
+</div>
+</div>
+<nz-table [nzData]="moduless" [nzPageSize]="7" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Học Phần</th>
+        <th>Tên Học Phần </th>
+        <th>Số Tín Chỉ</th>
+        <th>Tên Bộ Môn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let modules of  basicTable.data; let i = index;" (dblclick)="doubleClick(modules)" [class.selected]="modules === selectedModules">
+        <td>{{i + 1}}</td>
+        <td>{{ modules.moduleCode }}</td>
+        <td>{{ modules.moduleName }}</td>
+        <td>{{ modules.numberOfModule }}</td>
+        <td>{{ modules.moduleSubject }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(modules.moduleID)" [disabled]="modules.isDeleting" nzDanger>
+            <span *ngIf="modules.isDeleting"></span>
+            <span *ngIf="!modules.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý học phần" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #modulesForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã học phần</div>
+        <input type="text" [(ngModel)]="modules.moduleCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Tên học phần</div>
+        <input type="text" [(ngModel)]="modules.moduleName"  name="email" id="email" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Số tín chỉ</div>
+        <input type="number" [(ngModel)]="modules.numberOfModule"  name="nuber" id="nuber" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Tên bộ môn</div>
+        <nz-select style="width:170px;" [(ngModel)]="subjectID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSubject($event)">
+          <nz-option *ngFor="let sub of listSubject" [nzLabel]="sub.subjectName ?? ''" [nzValue]="sub.subjectID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>

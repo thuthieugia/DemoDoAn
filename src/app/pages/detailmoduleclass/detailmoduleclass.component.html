@@ -1,0 +1,87 @@
+<a (click)="click(detailmoduleclass)">Thêm năm học </a>
+<div nz-row>
+  <nz-table #basicTable nz-col nzSpan="12" >
+<tr>
+  <td>Học phần:</td>
+  <td>{{ detailmoduleclasss1.moduleClassModuleName }}</td>
+</tr>
+<tr >
+  <td >Bộ môn:</td>
+  <td>{{ detailmoduleclasss1.moduleSubject }}</td>
+</tr>
+<tr >
+  <td>Số tín chỉ:</td>
+  <td>{{ detailmoduleclasss1.moduleClassSemester}}</td>
+</tr >
+</nz-table>
+<nz-table #basicTable nz-col nzSpan="12" >
+    <tr >
+      <td>Mã Học Phần:</td>
+    <td>{{ detailmoduleclasss1.moduleClassModuleCode }}</td>
+    </tr >
+    <tr >
+      <td>Mã lớp học phần:</td>
+      <td>{{ detailmoduleclasss1.moduleClassCode }}</td>
+    </tr>
+    <tr>
+      <td >Giảng viên:</td>
+      <td>{{ detailmoduleclasss1.moduleClassTeacher}}</td>
+    </tr>
+</nz-table>
+</div>
+<nz-table [nzData]="detailmoduleclasss" [nzPageSize]="7" #Table >
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Mã sinh viên</th>
+      <th>Tên sinh viên</th>
+      <th>Điểm thứ nhất</th>
+      <th>Điểm thứ nhất</th>
+      <th>Điểm thi cuối khoá</th>
+      <th>lớp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let detailmoduleclass of Table.data; let i = index;"(dblclick)="doubleClick(detailmoduleclass)" [class.selected]="detailmoduleclass === selectedDetailmoduleclass">
+      <td>{{i + 1}}</td>
+      <td>{{ detailmoduleclass.detailModuleClassStudentCode}}</td>
+      <td>{{ detailmoduleclass.detailModuleClassStudentName }}</td>
+      <td>{{ detailmoduleclass.frequentPoints1 }}</td>
+      <td>{{ detailmoduleclass.frequentPoints2 }}</td>
+      <td>{{ detailmoduleclass.mediumScore }}</td>
+      <td>{{ detailmoduleclass.studentClass }}</td>
+
+    </tr>
+  </tbody>
+</nz-table>
+<style>
+  div nz-table tr td {
+   border: 1px solid black;
+  }
+</style>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý lịch thực hành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #equipmentForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã thiết bị</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.detailModuleClassStudentCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> tên thiết bị</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.detailModuleClassStudentName"  name="name" id="name" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Trạng thái</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.frequentPoints1"  name="frse1" id="frse1" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Trạng thái</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.frequentPoints2"  name="frse2" id="frse2" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Trạng thái</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.mediumScore"  name="medi" id="medi" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> tên thiết bị</div>
+        <input type="text" [(ngModel)]="detailmoduleclass.studentClass"  name="nast" id="nast" class="form-control" />
+      </nz-input-group>
+    </form>
+  </ng-container>
+</nz-modal>
+
+

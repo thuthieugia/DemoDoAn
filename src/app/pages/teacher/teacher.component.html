@@ -1,0 +1,64 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(teacher)">Thêm giảng viên </a>
+</div>
+</div>
+<nz-table [nzData]="teachers" [nzPageSize]="7" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Giảng Viên </th>
+        <th>Họ và Tên</th>
+        <th>Số Điện Thoại</th>
+        <th>Email</th>
+        <th>Bộ Môn</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let teacher of basicTable.data; let i = index;"(dblclick)="doubleClick(teacher)" [class.selected]="teacher === selectedTeacher">
+        <td>{{i + 1}}</td>
+        <td>{{ teacher.teacherCode }}</td>
+        <td>{{ teacher.fullName }}</td>
+        <td>{{ teacher.phoneNumber }}</td>
+        <td>{{ teacher.email }}</td>
+        <td>{{ teacher.teacherSubject }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(teacher.teacherID)" [disabled]="teacher.isDeleting" nzDanger>
+            <span *ngIf="teacher.isDeleting"></span>
+            <span *ngIf="!teacher.isDeleting">xoá</span>
+          </button>
+        </td>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý giảng viên" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #teacherForm="ngForm" role="form" nz-row>
+      <nz-input-group nz-col nzSpan="12"><div> Mã giảng viên</div>
+        <input type="text" [(ngModel)]="teacher.teacherCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Họ và tên</div>
+        <input type="text" [(ngModel)]="teacher.fullName"  name="name" id="name" class="form-control" />
+      </nz-input-group >
+      <nz-input-group nz-col nzSpan="12"><div> Số điện thoại</div>
+        <input type="text" [(ngModel)]="teacher.phoneNumber"  name="phone" id="phone" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12"><div> Gmail</div>
+        <input type="text" [(ngModel)]="teacher.email"  name="bu" id="bu" class="form-control" />
+      </nz-input-group>
+      <nz-input-group nz-col nzSpan="12">
+        <div >Bộ môn giảng dạy</div>
+        <nz-select style="width:170px;" [(ngModel)]="subjectID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeSubject($event)">
+          <nz-option *ngFor="let sub of listSubject" [nzLabel]="sub.subjectName ?? ''" [nzValue]="sub.subjectID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,127 @@
+<nz-layout class="app-layout" >
+  <nz-sider *ngIf="showLayout" class="menu-sidebar"
+            nzCollapsible
+            nzWidth="256px"
+            nzBreakpoint="md"
+            [(nzCollapsed)]="isCollapsed"
+            [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="/welcome">
+        <img src="/assets/image/HUNRE_Logo.png" alt="logo">
+        <h1>Quản Lý Thực Hành</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" >
+      <li nz-submenu nzTitle nzTitle="Tổng quan" nzIcon="dashboard" >
+        <ul>
+          <li nz-menu-item nzMatchRouter *ngIf="canShow(['admin'])">
+            <a routerLink="/schoolyear">Năm học</a>
+          </li>
+          <li nz-menu-item nzMatchRouter >
+            <a routerLink="/semester">Học kỳ </a>
+          </li>
+          <li nz-menu-item nzMatchRouter >
+            <a routerLink="/course">Khoá học</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/ology">Khoa</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/majors">Ngành</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/subject">Bộ Môn</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/module">Học Phần</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/class">Lớp Học</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/building">Toà Nhà</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle nzTitle="Nhân Sự" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter nzIcon="desktop">
+            <a routerLink="/teacher">Giảng Viên</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/student">Sinh Viên</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/technicalstaff">Cán Bộ Kỹ Thuật</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/moduleclass">
+      <!-- <li nz-menu-item > -->
+        <i nz-icon nzType="file" ></i>
+        <span >Lớp Học Phần</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/practicegroup">
+        <i nz-icon nzType="pushpin" ></i>
+        <span >Nhóm thực hành</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/practicallaboratory">
+        <i nz-icon nzType="desktop" ></i>
+        <span >Phòng thực hành</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/maintainance">
+        <i nz-icon nzType="highlight" ></i>
+        <span>Bảo trì</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/practiceschedule">
+        <i nz-icon nzType="calendar" ></i>
+        <span>Lịch thực hành</span>
+      </li>
+      <li nz-menu-item nzMatchRouter routerLink="/user">
+        <i nz-icon nzType="team" ></i>
+        <span>Quản Lý Tài Khoản</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header *ngIf="showLayout">
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <i class="trigger"
+               nz-icon
+               [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></i>
+            Trường Đại học Tài nguyên và Môi trường Hà Nội
+        </span>
+
+          <button
+          nz-button
+          nzType="primary"
+          nz-popover
+          nzPopoverTitle="Quản lý tài Khoản"
+          [(nzPopoverVisible)]="visible"
+          (nzPopoverVisibleChange)="change($event)"
+          nzPopoverTrigger="click"
+          [nzPopoverContent]="contentTemplate"
+          nzOffset="12"
+          nz-col
+        >user
+        <i nz-icon nzType="user" nzTheme="outline"></i>
+        </button>
+        <ng-template #contentTemplate>
+          <a routerLink="/logout" style="padding-left: 40px;">Đăng xuất</a>
+        </ng-template>
+      </div>
+    </nz-header>
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item></nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+    <nz-footer>©2022 nguyenlongvuwork@gmail.com</nz-footer>
+  </nz-layout>
+</nz-layout>
+

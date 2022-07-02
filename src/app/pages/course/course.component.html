@@ -1,0 +1,52 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(course)">thêm khoá học </a>
+</div>
+</div>
+<nz-table [nzData]="courses" [nzPageSize]="7" #basicTable>
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên Khoá học </th>
+        <th>Thời gian bắt đầu</th>
+        <th>Thời gian Kết thúc</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let course of basicTable.data; let i = index;" (dblclick)="doubleClick(course)" [class.selected]="course === selectedCourse">
+        <td>{{i + 1}}</td>
+        <td>{{ course.courseName }}</td>
+        <td>{{ course.startTime | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ course.endTime | date: 'dd/MM/yyyy' }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(course.courseID)" [disabled]="course.isDeleting" nzDanger>
+            <span *ngIf="course.isDeleting"></span>
+            <span *ngIf="!course.isDeleting">xoá</span>
+          </button>
+        </td>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý khoá học" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #courseForm="ngForm" role="form">
+      <nz-input-group><div> Tên khoá học</div>
+        <input type="text" [(ngModel)]="course.courseName"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group>
+        <div> Thời gian bắt đầu</div>
+        <nz-date-picker [(ngModel)]="course.startTime" name="startdate" id="startdate" class="form-control" ></nz-date-picker>
+      </nz-input-group>
+      <nz-input-group><div> Thời gian kết thúc</div>
+        <nz-date-picker [(ngModel)]="course.endTime"  name="enddate" id="enddate" class="form-control" ></nz-date-picker>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>

@@ -1,0 +1,47 @@
+
+<div nz-row>
+<div nz-col nzSpan="8">
+<nz-input-group [nzSuffix]="suffixIconSearch">
+  <input type="text" nz-input placeholder="Tìm kiếm..." />
+</nz-input-group>
+<ng-template #suffixIconSearch>
+  <i nz-icon nzType="search"></i>
+</ng-template>
+</div>
+ <div nz-col nzOffset="12">
+  <a (click)="click(schoolyear)">Thêm năm học </a>
+</div>
+</div>
+<nz-table [nzData]="schoolyears" [nzPageSize]="7" #basicTable>
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Năm Học</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let schoolyear of basicTable.data; let i = index;" (dblclick)="doubleClick(schoolyear)"
+      [class.selected]="schoolyear === selectedSchoolyear">
+      <td>{{i + 1}}</td>
+      <td>{{ schoolyear.schoolYearName }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="delete(schoolyear.schoolYearID)" [disabled]="schoolyear.isDeleting" nzDanger>
+          <span *ngIf="schoolyear.isDeleting"></span>
+          <span *ngIf="!schoolyear.isDeleting">xoá</span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+<!-- <nz-pagination [nzPageIndex]="2" [nzTotal]="9" [nzPageSize]="20"></nz-pagination> -->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Quản lý năm học" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #schoolyearForm="ngForm" role="form">
+      <nz-input-group>
+        <div> Tên năm học</div>
+          <input type="text" [(ngModel)]="schoolyear.schoolYearName" name="code" id="code" class="form-control" />
+        </nz-input-group>
+      </form>
+    </ng-container>
+</nz-modal>

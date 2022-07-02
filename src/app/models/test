@@ -1,0 +1,54 @@
+public bool login(int user, string passwd, tbl_can_bo_thu_vien users)
+        {
+            using (QuanLyThuVienDataContext db = new QuanLyThuVienDataContext())
+            {
+                int count = db.tbl_can_bo_thu_viens.Count(p => p.maCanBo == user && p.matKhau == passwd);
+                if (count == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public bool login(string userName, string password)
+        {
+            ConnectSQL connect = new ConnectSQL();
+            string sqlLogin = "SELECT COUNT(*) FROM member WHERE (phone = '"+ userName +"' OR email = '"+ userName +"') AND password = '"+ password +"'";
+            try
+            {
+                if (connect.Login(sqlLogin))
+                {
+                    return true;
+                } else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool Login(string sql)
+        {
+            Connect();
+            SqlDataAdapter sda = new SqlDataAdapter(sql, conn);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+            if (dt.Rows[0][0].ToString() == "1")
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        if (connect.Login(sqlLogin)) gọi đến login dưới

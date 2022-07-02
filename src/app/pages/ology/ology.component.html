@@ -1,0 +1,49 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(ology)">Thêm khoa </a>
+</div>
+</div>
+  <nz-table [nzData]="ologys" [nzPageSize]="7" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Khoa</th>
+        <th>Tên Khoa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let ology of basicTable.data; let i = index;" (dblclick)="doubleClick(ology)" [class.selected]="ology === selectedOlogy">
+        <td>{{i + 1}}</td>
+        <td>{{ ology.ologyCode }}</td>
+        <td>{{ ology.ologyName }}</td>
+                <td>
+          <button nz-button nzType="primary" (click)="delete(ology.ologyID)" [disabled]="ology.isDeleting" nzDanger>
+            <span *ngIf="ology.isDeleting"></span>
+            <span *ngIf="!ology.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý khoa" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+    <ng-container *nzModalContent>
+      <form class="form-horizontal" #ologyForm="ngForm" role="form">
+        <nz-input-group>
+          <div>Mã Khoa</div>
+          <input type="text" [(ngModel)]="ology.ologyCode"  name="codeol" id="codeol" class="form-control" />
+        </nz-input-group>
+        <nz-input-group>
+          <div> Tên Khoa</div>
+          <input type="text" [(ngModel)]="ology.ologyName"  name="nameol" id="nameol" class="form-control" />
+        </nz-input-group>
+    </form>
+    </ng-container>
+  </nz-modal>

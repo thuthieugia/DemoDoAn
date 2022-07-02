@@ -1,0 +1,108 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+  <div nz-col nzOffset="8">
+  <button nz-button nzType="primary" (click)="open()">Xác nhận bảo trì</button>
+</div>
+   <div nz-col nzOffset="1">
+<button nz-button nzType="primary" (click)="click(maintainance)">Thêm bảo trì </button>
+</div>
+</div>
+
+
+
+<nz-table [nzData]="maintainances" [nzPageSize]="7" #basicTable  >
+  <thead>
+    <tr>
+      <th>STT</th>
+      <th>Mã Phòng </th>
+      <th>Tên Phòng</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
+        <th>Mã cán bộ kỹ thuật</th>
+        <th>Tên cán bộ kỹ thuật</th>
+        <th>Trạng thái  </th>
+        <th>Mô tả</th>
+        <th>Báo cáo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let maintainance of basicTable.data; let i = index;" (dblclick)="doubleClick(maintainance)" [class.selected]="maintainance === selectedMaintainance">
+      <td>{{i + 1}}</td>
+      <td>{{ maintainance.maintainancePracticalLaboratorycode }}</td>
+      <td>{{ maintainance.maintainancePracticalLaboratoryname }}</td>
+      <td>{{ maintainance.startedDate | date: 'dd/MM/yyyy'  }}</td>
+      <td>{{ maintainance.endedDate | date: 'dd/MM/yyyy'  }}</td>
+      <td>{{ maintainance.maintainanceTechnicalStaffcode }}</td>
+        <td>{{ maintainance.maintainanceTechnicalStaffname }}</td>
+        <td>{{ maintainance.maintainanceStatus === 1 ? "Bảo trì" : "Bình thường"}}  </td>
+        <td>{{ maintainance.description}}</td>
+
+          <td>
+            <nz-switch [ngModel]="maintainance.request === 0 ? true : false"nzDisabled></nz-switch>
+          </td>
+
+          <td>
+            <button nz-button nzType="primary" (click)="delete(maintainance.maintainanceID)" [disabled]="maintainance.isDeleting" nzDanger>
+              <span *ngIf="maintainance.isDeleting"></span>
+              <span *ngIf="!maintainance.isDeleting">xoá</span>
+            </button>
+          </td>
+        </tr>
+  </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="The first Modal" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #maintainanceForm="ngForm" role="form">
+      <nz-input-group><label> Tên toà nhà</label>
+        <input type="text" [(ngModel)]="maintainance.startedDate"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+
+      <nz-input-group>
+        <label >Tên bộ môn</label>
+        <nz-select [(ngModel)]="practicalLaboratoryID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changePracticalLaboratory($event)">
+          <nz-option *ngFor="let sub of listPracticalLaboratory" [nzLabel]="sub.practicalLaboratoryName ?? ''" [nzValue]="sub.practicalLaboratoryID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>
+
+<nz-drawer
+[nzClosable]="false"
+[nzVisible]="visible"
+nzPlacement="right"
+nzTitle="Xác nhận bảo trì"
+(nzOnClose)="close()"
+>
+<ng-container *nzDrawerContent>
+  <nz-table [nzData]="maintainances" [nzPageSize]="7" #basicTable  >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Phòng </th>
+        <th>Tên Phòng</th>
+        <th>báo cáo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let maintainance of basicTable.data; let i = index;" (dblclick)="doubleClick(maintainance)" [class.selected]="maintainance === selectedMaintainance">
+        <td>{{i + 1}}</td>
+        <td>{{ maintainance.maintainancePracticalLaboratorycode }}</td>
+        <td>{{ maintainance.maintainancePracticalLaboratoryname }}</td>
+            <td>
+              <nz-switch [ngModel]="maintainance.request === 0 ? true : false"></nz-switch>
+            </td>
+          </tr>
+    </tbody>
+
+
+  </nz-table>
+</ng-container>
+</nz-drawer>

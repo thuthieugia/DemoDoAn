@@ -1,0 +1,68 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(student)">Thêm học sinh </a>
+</div>
+</div>
+<nz-table [nzData]="students" [nzPageSize]="7" #basicTable  >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã Sinh Viên</th>
+        <th>Họ Tên</th>
+        <th>Năm Sinh</th>
+        <th>Giới Tính</th>
+        <th>Lớp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of basicTable.data; let i = index;"(dblclick)="doubleClick(student)" [class.selected]="student === selectedStudent" >
+        <td>{{i + 1}}</td>
+        <td>{{ student.studentCode }}</td>
+        <td>{{ student.fullName}}</td>
+        <td>{{ student.dateOfBirth| date: 'dd/MM/yyyy'}}</td>
+        <td>{{ student.gender === 1 ? "Nam" : "Nữ" }}</td>
+        <td>{{ student.studentClass}}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(student.studentID)" [disabled]="student.isDeleting" nzDanger>
+            <span *ngIf="student.isDeleting"></span>
+            <span *ngIf="!student.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+</nz-table>
+<nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý sinh viên" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #studentForm="ngForm" role="form">
+      <nz-input-group><div> Mã Sinh Viên</div>
+        <input type="text" [(ngModel)]="student.studentCode"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group><div> Họ Tên </div>
+        <input type="text" [(ngModel)]="student.fullName"  name="name" id="name" class="form-control" />
+      </nz-input-group>
+      <nz-input-group><div> Năm Sinh </div>
+        <nz-date-picker  [(ngModel)]="student.dateOfBirth" name="dob" id="dob" class="form-control" ></nz-date-picker>
+      </nz-input-group>
+      <nz-input-group><div> Giới tính</div>
+        <nz-radio-group [(ngModel)]="student.gender" (ngModelChange)="changeGender($event)" [ngModelOptions]="{standalone: true}" >
+          <label nz-radio nzValue=0>Nữ</label>
+          <label nz-radio nzValue=1>Nam</label>
+        </nz-radio-group>
+      </nz-input-group>
+      <nz-input-group>
+        <div >Tên lớp</div>
+        <nz-select [(ngModel)]="classID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeClass($event)">
+          <nz-option *ngFor="let olo of listClass" [nzLabel]="olo.className ?? ''" [nzValue]="olo.classID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>

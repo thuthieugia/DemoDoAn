@@ -1,0 +1,19 @@
+export class Maintainance {
+  maintainanceID: string | undefined;
+  practicalLaboratoryID: string | undefined;
+  practicalLaboratoryCode: string | undefined;
+  practicalLaboratoryName: string | undefined;
+  startedDate: string | undefined;
+  endedDate: string | undefined;
+  technicalStaffID: string | undefined;
+  technicalStaffCode: string | undefined;
+  fullName: string | undefined;
+  maintainanceStatus: number | undefined;
+  request: number | undefined;
+  description: string | undefined;
+  maintainancePracticalLaboratorycode: string | undefined;
+  maintainancePracticalLaboratoryname: string | undefined;
+  maintainanceTechnicalStaffcode: string | undefined;
+  maintainanceTechnicalStaffname: string | undefined;
+  isDeleting: boolean = false;
+  }

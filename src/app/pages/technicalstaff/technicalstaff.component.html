@@ -1,0 +1,59 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+<a (click)="click(technicalstaff)">Thêm cán bộ kỹ thuật </a>
+</div>
+</div>
+  <nz-table [nzData]="technicalstaffs" [nzPageSize]="7" #basicTable >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Mã cán bộ kỹ thuật</th>
+        <th>Họ và Tên</th>
+        <th>Số Điện Thoại</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let technicalstaff of basicTable.data; let i = index;" (dblclick)="doubleClick(technicalstaff)" [class.selected]="technicalstaff === selectedTechnicalstaff">
+        <td>{{i + 1}}</td>
+        <td>{{ technicalstaff.technicalStaffCode }}</td>
+        <td>{{ technicalstaff.fullName }}</td>
+        <td>{{ technicalstaff.phoneNumber }}</td>
+        <td>{{ technicalstaff.email }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(technicalstaff.technicalStaffID)" [disabled]="technicalstaff.isDeleting" nzDanger>
+            <span *ngIf="technicalstaff.isDeleting"></span>
+            <span *ngIf="!technicalstaff.isDeleting">xoá</span>
+          </button>
+        </td>
+    </tbody>
+  </nz-table>
+  <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý cán bộ kỹ thuật" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+      <ng-container *nzModalContent>
+        <form class="form-horizontal" #technicalstaffForm="ngForm" role="form">
+          <nz-input-group><div> mã cán bộ kỹ thuật</div>
+            <input type="text" [(ngModel)]="technicalstaff.technicalStaffCode"  name="code" id="code" class="form-control" />
+          </nz-input-group>
+          <nz-input-group>
+          <div >Họ tên:</div>
+          <input type="text" [(ngModel)]="technicalstaff.fullName" name="name" id="name" class="form-control" />
+          </nz-input-group>
+          <nz-input-group>
+          <div >Số điện thoại:</div>
+          <input type="text" [(ngModel)]="technicalstaff.phoneNumber"  name="phone" id="phone" class="form-control" />
+        </nz-input-group>
+        <nz-input-group>
+          <div >Email:</div>
+          <input type="text" [(ngModel)]="technicalstaff.email"  name="email" id="email" class="form-control" />
+        </nz-input-group>
+      </form>
+      </ng-container>
+    </nz-modal>

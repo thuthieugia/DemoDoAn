@@ -1,0 +1,51 @@
+<div nz-row>
+  <div nz-col nzSpan="8">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" nz-input placeholder="Tìm kiếm..." />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  </div>
+   <div nz-col nzOffset="12">
+    <a (click)="click(majors)">Thêm ngành học </a>
+    </div>
+    </div>
+
+<nz-table  [nzData]="majorss" [nzPageSize]="7" #basicTable  >
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Tên Ngành</th>
+        <th>Tên Khoa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let majors of basicTable.data; let i = index;" (dblclick)="doubleClick(majors)" [class.selected]="majors === selectedMajors">
+        <td>{{i + 1}}</td>
+        <td>{{ majors.majorsName }}</td>
+        <td>{{ majors.majorsOlogy }}</td>
+        <td>
+          <button nz-button nzType="primary" (click)="delete(majors.majorsID)" [disabled]="majors.isDeleting" nzDanger>
+            <span *ngIf="majors.isDeleting"></span>
+            <span *ngIf="!majors.isDeleting">xoá</span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+ </nz-table>
+ <nz-modal  [(nzVisible)]="isVisible" nzTitle="Quản lý ngành" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <form class="form-horizontal" #majorsForm="ngForm" role="form">
+      <nz-input-group><div> Tên ngành</div>
+        <input type="text" [(ngModel)]="majors.majorsName"  name="code" id="code" class="form-control" />
+      </nz-input-group>
+      <nz-input-group>
+        <div >Tên khoa</div>
+        <nz-select style="width:170px;" [(ngModel)]="ologyID"  [ngModelOptions]="{standalone: true}" (ngModelChange)="changeOlogy($event)">
+          <nz-option *ngFor="let olo of listOlogy" [nzLabel]="olo.ologyName ?? ''" [nzValue]="olo.ologyID" ></nz-option>
+        </nz-select>
+      </nz-input-group>
+  </form>
+  </ng-container>
+</nz-modal>
